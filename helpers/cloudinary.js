@@ -1,4 +1,7 @@
 import cloud from "cloudinary";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const cloudinary = cloud.v2;
 
