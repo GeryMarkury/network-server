@@ -8,11 +8,14 @@ export const createPost = async (req, res) => {
 		const { userId, description } = req.body;
 		const user = await User.findById(userId);
 
-		const { path: oldPath } = req.file;
-		const { url: image } = await cloudinary.uploader.upload(oldPath, {
-			folder: "network",
-		});
-		await fs.unlink(oldPath);
+		if (req.file) {
+			const { path: oldPath } = req.file;
+			const { url: image } = await cloudinary.uploader.upload(oldPath, {
+				folder: "network",
+			});
+			await fs.unlink(oldPath);
+			return image;
+		}
 
 		const newPost = new Post({
 			userId,
@@ -21,7 +24,7 @@ export const createPost = async (req, res) => {
 			location: user.location,
 			description,
 			userPicturePath: user.picturePath,
-			picturePath: image,
+			picturePath: image || "",
 			likes: {},
 			comments: [],
 		});
