@@ -1,5 +1,7 @@
 import Post from "../models/Post.js";
 import User from "../models/User.js";
+import cloudinary from "../helpers/cloudinary.js";
+import fs from "fs/promises";
 
 export const createPost = async (req, res) => {
 	try {
