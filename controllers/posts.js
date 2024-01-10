@@ -3,8 +3,15 @@ import User from "../models/User.js";
 
 export const createPost = async (req, res) => {
 	try {
-		const { userId, description, picturePath } = req.body;
+		const { userId, description } = req.body;
 		const user = await User.findById(userId);
+
+		const { path: oldPath } = req.file;
+		const { url: image } = await cloudinary.uploader.upload(oldPath, {
+			folder: "network",
+		});
+		await fs.unlink(oldPath);
+
 		const newPost = new Post({
 			userId,
 			firstName: user.firstName,
@@ -12,7 +19,7 @@ export const createPost = async (req, res) => {
 			location: user.location,
 			description,
 			userPicturePath: user.picturePath,
-			picturePath,
+			picturePath: image,
 			likes: {},
 			comments: [],
 		});
